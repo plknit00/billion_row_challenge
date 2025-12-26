@@ -1,19 +1,17 @@
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.BufferedReader;
+import java.io.PrintWriter; // For formatted output
+import java.io.FileNotFoundException; // Specific exception for file not found
+import java.io.IOException; // General IO exception
+import java.util.Scanner; // Can be used to read files line by line
+import java.io.File;
+import java.util.Map;
+import java.util.HashMap;
 
-public class City {
-  float min_temp;
-  float max_temp;
-  float avg_temp;
-  int num_entries;
 
-  public City(float temp) {
-    this.minTemp = temp;
-    this.maxTemp = temp;
-    this.avgTemp = temp;
-    this.numEntries = 1;
-  }
-}
 
-public class parse_file {
+public class ParseFile {
 
   public static String parse_city(String row) {
     int index = 0;
@@ -40,14 +38,14 @@ public class parse_file {
 
   public static void update_city(String city_name, float temp,
                                  Map<String, City> cities) {
-    City city = cities.get(cityName);
+    City city = cities.get(city_name);
     if (city != null) {
-      city.avg = ((city.average * num_entries) + temp) / (num_entries + 1);
-      if (temp < city.min) {
-        city.min = temp;
+      city.avg_temp = ((city.avg_temp * city.num_entries) + temp) / (city.num_entries + 1);
+      if (temp < city.min_temp) {
+        city.min_temp = temp;
       }
-      if (temp > city.max) {
-        city.max = temp;
+      if (temp > city.max_temp) {
+        city.max_temp = temp;
       }
       city.num_entries++;
     } else {
@@ -57,11 +55,11 @@ public class parse_file {
 
   public static void read_and_parse_file(File file, Map<String, City> cities) {
     // try-with-resources: Scanner will be closed automatically
-    try (Scanner myReader = new Scanner(myObj)) {
+    try (Scanner myReader = new Scanner(file)) {
       while (myReader.hasNextLine()) {
         String data = myReader.nextLine();
-        string city_name = parse_city(row);
-        string temp = parse_temp(row);
+        String city_name = parse_city(data);
+        float temp = parse_temp(data);
         update_city(city_name, temp, cities);
       }
     } catch (FileNotFoundException e) {
