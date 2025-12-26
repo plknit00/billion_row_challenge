@@ -15,25 +15,22 @@ public class ParseFile {
 
   public static String parse_city(String row) {
     int index = 0;
-    while ((index < row.length()) && (row.charAt(index) != '-') &&
-           !(Character.isDigit(row.charAt(index)))) {
+    while (index < row.length() && row.charAt(index) != ';') {
       index++;
     }
     return row.substring(0, index).trim();
   }
 
   public static Float parse_temp(String row) {
-    int index = 0;
-    while (index < row.length() && row.charAt(index) != '-' &&
-           !Character.isDigit(row.charAt(index))) {
-      index++;
+    int start_index = row.indexOf(';');
+    if (start_index == -1 || start_index + 1 >= row.length()) {
+        throw new NumberFormatException("row missing ';': " + row);
     }
-    int start_index = index;
-    while (index < row.length() &&
-           (Character.isDigit(row.charAt(index)) || row.charAt(index) == '.')) {
-      index++;
+    String temp_str = row.substring(start_index + 1).replaceAll("\\s+", "");
+    if (temp_str.isEmpty()) {
+        throw new NumberFormatException("empty temperature in row: " + row);
     }
-    return Float.parseFloat(row.substring(start_index, index));
+    return Float.parseFloat(temp_str);
   }
 
   public static void update_city(String city_name, float temp,
@@ -58,6 +55,9 @@ public class ParseFile {
     try (Scanner myReader = new Scanner(file)) {
       while (myReader.hasNextLine()) {
         String data = myReader.nextLine();
+        if (data.isEmpty()) {
+          continue;
+        }
         String city_name = parse_city(data);
         float temp = parse_temp(data);
         update_city(city_name, temp, cities);
@@ -66,12 +66,22 @@ public class ParseFile {
       System.out.println("An error occurred.");
       e.printStackTrace();
     }
-    // what to do with hash map??? do we return anything?
+  }
+
+  public static void print_summary(Map<String, City> cities) {
+    for (String city_name : cities.keySet()) {
+      System.out.println(city_name);
+      City city = cities.get(city_name);
+      System.out.println(city_name + ", Min Temp =" + city.min_temp);
+      System.out.println(city_name + ", Avg Temp =" + city.avg_temp);
+      System.out.println(city_name + ", Max Temp =" + city.max_temp);
+    }
   }
 
   public static void main(String[] args) {
     File billion_row_file = new File(args[0]);
     Map<String, City> cities = new HashMap<>();
     read_and_parse_file(billion_row_file, cities);
+    print_summary(cities);
   }
 }

@@ -1,6 +1,6 @@
 St. Louis;34.5
 St. Louis;29.7
-St. Louis:58.3
+St. Louis;58.3
 Ellisville;12.0
 Ellisville;34.6
 Wildwood;18.9
