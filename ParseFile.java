@@ -69,13 +69,20 @@ public class ParseFile {
   }
 
   public static void print_summary(Map<String, City> cities) {
+    System.out.print('{');
+    Boolean first_loop = true;
     for (String city_name : cities.keySet()) {
-      System.out.println(city_name);
+      if (!first_loop) {
+        System.out.print(", ");
+      }
+      System.out.print(city_name + "=");
       City city = cities.get(city_name);
-      System.out.println(city_name + ", Min Temp =" + city.min_temp);
-      System.out.println(city_name + ", Avg Temp =" + city.avg_temp);
-      System.out.println(city_name + ", Max Temp =" + city.max_temp);
+      System.out.print(city.min_temp + "/");
+      System.out.print(city.avg_temp + "/");
+      System.out.print(city.max_temp);
+      first_loop = false;
     }
+    System.out.print("}\n");
   }
 
   public static void main(String[] args) {
