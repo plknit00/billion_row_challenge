@@ -21,7 +21,6 @@ public class ParseFile {
     if (start_index == -1 || start_index + 1 >= row.length()) {
       throw new NumberFormatException("row missing ';': " + row);
     }
-    // test
     return Float.parseFloat(row.substring(start_index + 1));
   }
 

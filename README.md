@@ -1,8 +1,33 @@
-<h1>How to run java</h1>
+# Billion row challenge
 
-<h2>compile: javac ParseFile.java </h2>
-<h2>run file: java ParseFile small_test.txt </h2>
+I am using [this repo](https://github.com/ClaytonKnittel/1brc) for reference
 
-<h2>Use this repo to make files: https://github.com/ClaytonKnittel/1brc</h2>
+To compile code, run the following command:
 
-<h3>To run profiling, be on Linux computer: perf record -F 200 --call-graph dwarf -- java ParseFile test_files/measurements_5mil.txt</h3>
+```
+javac ParseFile.java City.java
+```
+
+To run code, run the following command:
+
+```
+java ParseFile test_files/measurements.txt
+```
+
+To run timed code, run the following command:
+
+```
+time java ParseFile measurements.txt
+```
+
+To make a billion line file, run the following command in the 1brc repo:
+
+```
+cargo r --release
+```
+
+Then, copy it over using:
+
+```
+mv measurements.txt ../billion_row_challenge/test_files/
+```
