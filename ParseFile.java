@@ -1,43 +1,34 @@
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException; // Specific exception for file not found
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.BufferedReader;
-import java.io.PrintWriter; // For formatted output
-import java.io.FileNotFoundException; // Specific exception for file not found
 import java.io.IOException; // General IO exception
-import java.util.Scanner; // Can be used to read files line by line
-import java.io.File;
-import java.util.Map;
+import java.io.PrintWriter; // For formatted output
 import java.util.HashMap;
-
-
+import java.util.Map;
+import java.util.Scanner; // Can be used to read files line by line
 
 public class ParseFile {
 
   public static String parse_city(String row) {
-    int index = 0;
-    while (index < row.length() && row.charAt(index) != ';') {
-      index++;
-    }
-    return row.substring(0, index).trim();
+    int index = row.indexOf(';');
+    return row.substring(0, index);
   }
 
   public static Float parse_temp(String row) {
     int start_index = row.indexOf(';');
     if (start_index == -1 || start_index + 1 >= row.length()) {
-        throw new NumberFormatException("row missing ';': " + row);
+      throw new NumberFormatException("row missing ';': " + row);
     }
-    String temp_str = row.substring(start_index + 1).replaceAll("\\s+", "");
-    if (temp_str.isEmpty()) {
-        throw new NumberFormatException("empty temperature in row: " + row);
-    }
-    return Float.parseFloat(temp_str);
+    return Float.parseFloat(row.substring(start_index + 1));
   }
 
   public static void update_city(String city_name, float temp,
                                  Map<String, City> cities) {
     City city = cities.get(city_name);
     if (city != null) {
-      city.avg_temp = ((city.avg_temp * city.num_entries) + temp) / (city.num_entries + 1);
+      city.temp_sum += temp;
       if (temp < city.min_temp) {
         city.min_temp = temp;
       }
@@ -78,7 +69,7 @@ public class ParseFile {
       System.out.print(city_name + "=");
       City city = cities.get(city_name);
       System.out.print(city.min_temp + "/");
-      System.out.print(city.avg_temp + "/");
+      System.out.print((city.temp_sum / city.num_entries) + "/");
       System.out.print(city.max_temp);
       first_loop = false;
     }
